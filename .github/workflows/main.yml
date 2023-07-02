@@ -1,0 +1,60 @@
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    name: Smoke test
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: |
+            16
+            19
+            20
+
+      - uses: gradle/gradle-build-action@v2
+
+      - id: build-lib
+        run: ./gradlew build
+
+      - id: copy-lib
+        if: github.event_name == 'pull_request'
+        run: cp ./build/libs/ftl-tests-results-r8.jar .
+
+      - id: ftl-tests-summary
+        if: github.event_name == 'pull_request'
+        uses: ./
+        with:
+          merged-results-file: "src/test/resources/results-with-errors-and-flakes.xml"
+
+      - uses: peter-evans/find-comment@v2
+        id: find_comment
+        if: github.event_name == 'pull_request'
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: "Smoke test"
+
+      - uses: peter-evans/create-or-update-comment@v3
+        if: ${{ steps.ftl-tests-summary.outputs.text-summary != null || steps.find_comment.outputs.comment-id != null }}
+        with:
+          body: |
+            Smoke test
+             
+            ${{ steps.ftl-tests-summary.outputs.text-summary }}
+          edit-mode: replace
+          comment-id: ${{ steps.find_comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
