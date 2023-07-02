@@ -10,17 +10,17 @@ group = "org.usefulness"
 version = "1.0-SNAPSHOT"
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(20)
 }
 
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_16)
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(11)
+    options.release.set(16)
 }
 
 tasks {
@@ -54,7 +54,7 @@ tasks.named<Jar>("jar").configure {
 configurations.register("r8")
 dependencies.add("r8", "com.android.tools:r8:8.0.40")
 tasks.register<JavaExec>("r8jar") {
-    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(11)) })
+    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(19)) })
 
     dependsOn("jar")
 
