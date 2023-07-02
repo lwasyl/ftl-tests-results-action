@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    kotlin("multiplatform") version "1.8.21"
-    kotlin("plugin.serialization") version "1.8.21"
+    kotlin("jvm") version "1.8.21"
 }
 
 group = "org.usefulness"
@@ -13,40 +13,26 @@ repositories {
 }
 
 kotlin {
-    jvm()
-
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("com.squareup.okio:okio:3.3.0")
-                implementation("io.github.pdvrieze.xmlutil:core:0.86.0")
-                implementation("io.github.pdvrieze.xmlutil:serialization:0.86.0")
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-                implementation("com.squareup.okio:okio-fakefilesystem:3.3.0")
-            }
-        }
-        val jsMain by getting {
-            dependencies {
-                implementation("com.squareup.okio:okio-nodefilesystem:3.3.0")
-            }
-        }
-        val jsTest by getting
-        val jvmMain by getting
-        val jvmTest by getting
-    }
-
     jvmToolchain(17)
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+    kotlinOptions {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+    }
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    options.release.set(17)
 }
 
 tasks {
     withType<Test>().configureEach {
         useJUnitPlatform()
     }
-    withType<KotlinCompile>().configureEach {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.majorVersion
-    }
+}
+
+dependencies {
+    implementation("com.squareup.okio:okio:3.3.0")
+    implementation(kotlin("test"))
 }
