@@ -34,7 +34,7 @@ private fun XmlFacade.XmlTag.extractTestCase(): TestCase {
     val failures = getChildTagsByName("failure").map { Stacktrace.fromString(checkNotNull(it.textContent)) }.toList()
 
     return TestCase(
-        className = requireAttribute("classname"),
+        fqClassname = requireAttribute("classname"),
         testName = requireAttribute("name"),
         result = when {
             flaky -> TestResult.SuccessfulButFlaky(errors = failures)

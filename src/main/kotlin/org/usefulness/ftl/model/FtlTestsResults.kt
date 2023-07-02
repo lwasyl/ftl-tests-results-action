@@ -1,6 +1,5 @@
 package org.usefulness.ftl.model
 
-import kotlin.text.Typography.nbsp
 import kotlin.time.Duration
 
 data class FtlTestsResults(
@@ -19,7 +18,7 @@ data class TestsSummary(
 )
 
 data class TestCase(
-    val className: String,
+    val fqClassname: String,
     val testName: String,
     val result: TestResult,
     val duration: Duration,
@@ -28,8 +27,9 @@ data class TestCase(
     val isFlaky get() = result is TestResult.SuccessfulButFlaky
     val isFailed get() = result is TestResult.Failure
     val isSuccessful get() = result is TestResult.Success
-    val fqn get() = "$className#$testName"
-    val shortName get() = "${className.substringAfterLast('.')}#$testName"
+    val fqn get() = "$fqClassname#$testName"
+    val shortClassName get() = fqClassname.substringAfterLast('.')
+    val shortName get() = "$shortClassName#$testName"
 }
 
 sealed class TestResult {
