@@ -21,7 +21,6 @@ jobs:
         with:
           distribution: temurin
           java-version: |
-            16
             19
             20
 
@@ -48,12 +47,12 @@ jobs:
           body-includes: "Smoke test"
 
       - uses: peter-evans/create-or-update-comment@v3
-        if: ${{ steps.ftl-tests-summary.outputs.text-summary != null || steps.find_comment.outputs.comment-id != null }}
+        if: ${{ steps.ftl-tests-summary.outputs.summary-markdown != null || steps.find_comment.outputs.comment-id != null }}
         with:
           body: |
             Smoke test
              
-            ${{ steps.ftl-tests-summary.outputs.text-summary }}
+            ${{ steps.ftl-tests-summary.outputs.summary-markdown }}
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
