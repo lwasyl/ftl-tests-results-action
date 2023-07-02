@@ -32,7 +32,7 @@ tasks {
 dependencies {
     implementation("com.squareup.okio:okio:3.3.0")
     implementation("com.github.ajalt.clikt:clikt:3.5.4")
-    implementation(kotlin("test"))
+    testImplementation(kotlin("test"))
 }
 
 tasks.named<Jar>("jar").configure {
