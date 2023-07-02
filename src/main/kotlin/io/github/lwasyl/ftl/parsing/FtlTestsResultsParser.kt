@@ -1,9 +1,9 @@
-package org.usefulness.ftl.parsing
+package io.github.lwasyl.ftl.parsing
 
+import io.github.lwasyl.ftl.model.*
+import io.github.lwasyl.ftl.xml.DefaultXmlFacade
+import io.github.lwasyl.ftl.xml.XmlFacade
 import okio.Source
-import org.usefulness.ftl.model.*
-import org.usefulness.ftl.xml.DefaultXmlFacade
-import org.usefulness.ftl.xml.XmlFacade
 import kotlin.time.Duration.Companion.seconds
 
 internal fun parseFtlResults(
@@ -31,7 +31,8 @@ private fun XmlFacade.XmlTag.extractTestsSummary() = TestsSummary(
 
 private fun XmlFacade.XmlTag.extractTestCase(): TestCase {
     val flaky = getAttribute("flaky")?.toBooleanStrict() ?: false
-    val failures = getChildTagsByName("failure").map { Stacktrace.fromString(checkNotNull(it.textContent)) }.toList()
+    val failures =
+        getChildTagsByName("failure").map { Stacktrace.fromString(checkNotNull(it.textContent)) }.toList()
 
     return TestCase(
         fqClassname = requireAttribute("classname"),

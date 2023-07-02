@@ -1,4 +1,4 @@
-package org.usefulness.ftl.xml
+package io.github.lwasyl.ftl.xml
 
 import okio.Source
 import okio.buffer
@@ -33,7 +33,6 @@ object W3cXmlFacade : XmlFacade {
 
                 override fun getChildTagsByName(name: String) =
                     getElementsByTagName(name).asSequence().map { it as Element }.map { it.asXmlTag() }
-
             }
         }
     }

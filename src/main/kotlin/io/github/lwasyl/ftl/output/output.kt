@@ -1,11 +1,11 @@
-package org.usefulness.ftl.output
+package io.github.lwasyl.ftl.output
 
+import io.github.lwasyl.ftl.model.FtlTestsResults
+import io.github.lwasyl.ftl.model.TestCase
+import io.github.lwasyl.ftl.model.TestResult
+import io.github.lwasyl.ftl.transformations.shorten
 import okio.Sink
 import okio.buffer
-import org.usefulness.ftl.model.FtlTestsResults
-import org.usefulness.ftl.model.TestCase
-import org.usefulness.ftl.model.TestResult
-import org.usefulness.ftl.transformations.shorten
 import kotlin.time.DurationUnit
 
 fun writeOutput(

@@ -1,13 +1,12 @@
-package org.usefulness.ftl.cli
+package io.github.lwasyl.ftl.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
-import okio.Path.Companion.toPath
+import io.github.lwasyl.ftl.output.writeOutput
+import io.github.lwasyl.ftl.parsing.parseFtlResults
 import okio.sink
 import okio.source
-import org.usefulness.ftl.output.writeOutput
-import org.usefulness.ftl.parsing.parseFtlResults
 import kotlin.io.path.Path
 
 class FtlTestsResultsCli : CliktCommand() {

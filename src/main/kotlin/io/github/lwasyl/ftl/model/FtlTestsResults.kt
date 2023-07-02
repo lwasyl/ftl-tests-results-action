@@ -1,4 +1,4 @@
-package org.usefulness.ftl.model
+package io.github.lwasyl.ftl.model
 
 import kotlin.time.Duration
 
@@ -55,6 +55,7 @@ sealed class TestResult {
 value class Stacktrace private constructor(val value: String) {
 
     companion object {
+
         fun fromString(string: String): Stacktrace {
             check(string.isNotBlank()) { "Stacktrace can't be empty" }
 

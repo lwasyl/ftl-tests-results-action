@@ -3,30 +3,26 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm") version "1.8.22"
 }
-
-group = "org.usefulness"
-version = "1.0-SNAPSHOT"
 
 kotlin {
     jvmToolchain(20)
 }
 
+var targetJavaVersion = "16"
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_16)
+        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion))
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(16)
+    options.release.set(targetJavaVersion.toInt())
 }
 
-tasks {
-    withType<Test>().configureEach {
-        useJUnitPlatform()
-    }
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
 
 dependencies {
@@ -37,11 +33,11 @@ dependencies {
 
 tasks.named<Jar>("jar").configure {
     manifest {
-        attributes["Main-Class"] = "org.usefulness.ftl.cli.FtlTestsResultsCliKt"
+        attributes["Main-Class"] = "io.github.lwasyl.ftl.cli.FtlTestsResultsCliKt"
     }
     archiveClassifier.set("fat")
 
-    from(sourceSets.main.get().output.classesDirs)
+    from(sourceSets.main.map { it.output.classesDirs })
     configurations.named("runtimeClasspath").let { runtimeClasses ->
         dependsOn(runtimeClasses)
         from({ runtimeClasses.get().map { if (it.isDirectory) it else zipTree(it) } }) {
@@ -49,6 +45,8 @@ tasks.named<Jar>("jar").configure {
         }
     }
     exclude("META-INF/**/*")
+
+    finalizedBy("r8jar")
 }
 
 configurations.register("r8")
@@ -62,7 +60,7 @@ tasks.register<JavaExec>("r8jar") {
     mainClass.set("com.android.tools.r8.R8")
 
     val jar = tasks.getByName<Jar>("jar")
-    val outFile = buildDir.resolve("libs/${jar.archiveBaseName.get()}-${jar.archiveVersion.get()}-r8.jar")
+    val outFile = buildDir.resolve("libs/${jar.archiveBaseName.get()}-r8.jar")
 
     args(
         "--release",
@@ -72,8 +70,4 @@ tasks.register<JavaExec>("r8jar") {
         "--lib", System.getProperty("java.home").toString(),
         jar.archiveFile.get().toString(),
     )
-}
-
-tasks.named("build").configure {
-    dependsOn("r8jar")
 }

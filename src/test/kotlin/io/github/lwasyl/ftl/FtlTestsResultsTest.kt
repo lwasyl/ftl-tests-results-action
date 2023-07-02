@@ -1,12 +1,11 @@
-package org.usefulness.ftl
+package io.github.lwasyl.ftl
 
+import io.github.lwasyl.ftl.model.Stacktrace
+import io.github.lwasyl.ftl.model.TestResult
+import io.github.lwasyl.ftl.model.TestsSummary
+import io.github.lwasyl.ftl.parsing.parseFtlResults
+import io.github.lwasyl.ftl.transformations.shorten
 import okio.source
-import org.usefulness.ftl.model.Stacktrace
-import org.usefulness.ftl.model.TestResult
-import org.usefulness.ftl.model.TestsSummary
-import org.usefulness.ftl.parsing.parseFtlResults
-import org.usefulness.ftl.transformations.shorten
-import java.util.Stack
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -27,20 +26,20 @@ class FtlTestsResultsTest {
                     skipped = 0,
                     totalDuration = 231.482.seconds,
                 ),
-                actual = results.summary
+                actual = results.summary,
             )
 
             assertContentEquals(
                 expected = listOf("NoPackageTest#testMethod2"),
-                actual = results.tests.filter { it.isFlaky }.map { it.shortName }
+                actual = results.tests.filter { it.isFlaky }.map { it.shortName },
             )
 
             assertContentEquals(
                 expected = listOf(
                     "com.example.foo.bar.BarTest#testMethod2",
-                    "com.example.foo.bar.BarTest#testMethod5"
+                    "com.example.foo.bar.BarTest#testMethod5",
                 ),
-                actual = results.tests.filter { it.isFailed }.map { it.fqn }
+                actual = results.tests.filter { it.isFailed }.map { it.fqn },
             )
 
             assertEquals(
@@ -74,7 +73,7 @@ class FtlTestsResultsTest {
                     at android.content.res.Resources.getString(Resources.java:546)
                     at android.content.Context.getString(Context.java:762)
                     at androidx.appcompat.widget.py7.h(Unknown Source:71)
-                """.trimIndent()
+                """.trimIndent(),
             ),
             actual = sampleStacktrace.shorten(),
         )
@@ -155,5 +154,5 @@ private val sampleStacktrace = Stacktrace.fromString(
         at androidx.lifecycle.a${'$'}a.a(Unknown Source:52)
         ... 41 more
     
-    """.trimIndent()
+    """.trimIndent(),
 )

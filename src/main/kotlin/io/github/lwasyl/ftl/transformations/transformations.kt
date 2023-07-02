@@ -1,6 +1,6 @@
-package org.usefulness.ftl.transformations
+package io.github.lwasyl.ftl.transformations
 
-import org.usefulness.ftl.model.Stacktrace
+import io.github.lwasyl.ftl.model.Stacktrace
 
 internal fun Stacktrace.shorten() = value.lines()
     .asSequence()

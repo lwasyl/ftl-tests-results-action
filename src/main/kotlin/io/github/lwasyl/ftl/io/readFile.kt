@@ -1,4 +1,4 @@
-package org.usefulness.ftl.io
+package io.github.lwasyl.ftl.io
 
 import java.io.File
 import java.io.InputStream

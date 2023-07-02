@@ -1,4 +1,4 @@
-package org.usefulness.ftl.xml
+package io.github.lwasyl.ftl.xml
 
 import okio.Source
 

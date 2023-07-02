@@ -3,7 +3,7 @@
 
 -allowaccessmodification
 
--keep class org.usefulness.ftl.cli.FtlTestsResultsCliKt {
+-keep class io.github.lwasyl.ftl.cli.FtlTestsResultsCliKt {
   public static void main(java.lang.String[]);
 }
 
