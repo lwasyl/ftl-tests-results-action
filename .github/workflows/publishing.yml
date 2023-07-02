@@ -1,0 +1,54 @@
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version name to release in format v1.2.3[-alpha]
+        required: true
+      major-version:
+          description: Major version tag to update in format `v1`
+          required: false
+
+jobs:
+  publish-to-release-branch:
+    runs-on: ubuntu-latest
+    name: Publish artifacts to release branch
+    env:
+      VERSION_NAME: ${{ github.event.inputs.version }}
+      MAJOR_VERSION_NAME: ${{ github.event.inputs.major-version }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: |
+            19
+            20
+
+      - uses: gradle/gradle-build-action@v2
+
+      - id: build-lib
+        run: ./gradlew build
+
+      - id: checkout-releases-branch
+        uses: actions/checkout@v3
+        with:
+          ref: releases
+          path: releases-branch/
+
+      - id: copy-action-data
+        run: |
+          cp ./build/libs/ftl-tests-results-r8.jar ./releases-branch/
+          cp action.yml ./releases-branch
+          cp entrypoint.sh ./releases-branch
+
+      - id: commit-and-tag
+        run: |
+          cd releases-branch
+          git config --global user.name 'github-actions'
+          git config --global user.email '<>'
+          git add .
+          git commit -m "Publish release $VERSION_NAME artifacts"
+          git tag $VERSION_NAME
+          [ ! -z "$MAJOR_VERSION_NAME" ] && git tag -f $MAJOR_VERSION_NAME || echo "Skipping setting major version tag"
+          git push && git push -f --tags
