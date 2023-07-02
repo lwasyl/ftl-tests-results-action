@@ -1,0 +1,26 @@
+name: Firebase Test Lab summary generator
+description: Github Summary for Firebase Test Lab test runs
+
+inputs:
+  merged-results-file:
+    description: 'Path to the FTL results file (i.e. "./downloaded/panther-33-en-portrait-test_result_merged.xml")'
+    required: true
+
+outputs:
+  summary-markdown:
+    description: Summary markdown
+    value: ${{ steps.generate-summary.outputs.summary-markdown }}
+
+branding:
+  color: 'green'
+  icon: 'check-square'
+
+runs:
+  using: 'composite'
+  steps:
+    - id: generate-summary
+      shell: bash
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_MERGED_RESULT_FILE: ${{ inputs.merged-results-file }}
+      run: ./entrypoint.sh
