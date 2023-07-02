@@ -37,7 +37,6 @@ tasks.named<Jar>("jar").configure {
     }
     archiveClassifier.set("fat")
 
-    from(sourceSets.main.map { it.output.classesDirs })
     configurations.named("runtimeClasspath").let { runtimeClasses ->
         dependsOn(runtimeClasses)
         from({ runtimeClasses.get().map { if (it.isDirectory) it else zipTree(it) } }) {
