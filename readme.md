@@ -8,7 +8,7 @@ Example usage:
 
 ```yaml
   -   env: # set for entire job
-      FTL_RESULTS_DIRECTORY: ${{ join([github.run_id, github.run_number, github.run_attempt], '-') }}
+      FTL_RESULTS_DIRECTORY: '${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}'
 
   -   uses: google-github-actions/auth@v0
       with:
@@ -27,7 +27,7 @@ Example usage:
       run: gsutil cp "gs://test-lab-your-bucket-name/$FTL_RESULTS_DIRECTORY/*results_merged.xml merged_results.xml
 
   -   id: ftl-tests-summary
-      uses: @lwasyl/ftl-tests-results-action@v0.1.0
+      uses: lwasyl/ftl-tests-results-action@v0.1.1
       with:
           merged-results-file: ./merged_results.xml
 
