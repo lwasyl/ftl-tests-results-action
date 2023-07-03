@@ -11,11 +11,12 @@ import kotlin.time.DurationUnit
 fun writeOutput(
     results: FtlTestsResults,
     sink: Sink,
+    onlyErrors: Boolean = false,
 ) {
-    sink.buffer().use { it.writeUtf8(results.buildMarkdownOutput()) }
+    sink.buffer().use { it.writeUtf8(results.buildMarkdownOutput(onlyErrors = onlyErrors)) }
 }
 
-private fun FtlTestsResults.buildMarkdownOutput() = buildString {
+private fun FtlTestsResults.buildMarkdownOutput(onlyErrors: Boolean) = buildString {
     append("# FTL tests results\n\n")
 
     if (summary.failures > 0) {
@@ -32,9 +33,11 @@ private fun FtlTestsResults.buildMarkdownOutput() = buildString {
         append("\n\n\n")
     }
 
-    append("## Longest tests:\n\n")
-    testsTableHeader()
-    tests.sortedByDescending { it.duration }.take(10).forEach { append(it.testsTableRow()) }
+    if (!onlyErrors) {
+        append("## Longest tests:\n\n")
+        testsTableHeader()
+        tests.sortedByDescending { it.duration }.take(10).forEach { append(it.testsTableRow()) }
+    }
 
     if (summary.failures > 0) {
         append("## Failed tests errors:\n")
