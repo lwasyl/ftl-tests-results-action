@@ -37,7 +37,7 @@ jobs:
         with:
           merged-results-file: "src/test/resources/results-with-errors-and-flakes.xml"
 
-      - uses: peter-evans/find-comment@v2
+      - uses: peter-evans/find-comment@v3
         id: find_comment
         if: github.event_name == 'pull_request'
         with:
