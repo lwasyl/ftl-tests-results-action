@@ -12,9 +12,7 @@ kotlin {
 
 var targetJavaVersion = "16"
 tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion))
-    }
+    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion))
 }
 
 tasks.withType<JavaCompile>().configureEach {
@@ -27,7 +25,7 @@ tasks.withType<Test>().configureEach {
 
 dependencies {
     implementation("com.squareup.okio:okio:3.9.0")
-    implementation("com.github.ajalt.clikt:clikt:3.5.4")
+    implementation("com.github.ajalt.clikt:clikt:4.4.0")
     testImplementation(kotlin("test"))
 }
 
@@ -59,7 +57,7 @@ tasks.register<JavaExec>("r8jar") {
     mainClass.set("com.android.tools.r8.R8")
 
     val jar = tasks.getByName<Jar>("jar")
-    val outFile = buildDir.resolve("libs/${jar.archiveBaseName.get()}-r8.jar")
+    val outFile = layout.buildDirectory.asFile.get().resolve("libs/${jar.archiveBaseName.get()}-r8.jar")
 
     args(
         "--release",
