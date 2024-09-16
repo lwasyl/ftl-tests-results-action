@@ -1,6 +1,7 @@
 package io.github.lwasyl.ftl.cli
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import io.github.lwasyl.ftl.output.writeOutput
