@@ -1,70 +1,32 @@
-import org.gradle.jvm.tasks.Jar
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    kotlin("jvm") version "2.0.20"
+    kotlin("multiplatform") version "2.0.20"
+    kotlin("plugin.serialization") version "2.0.20"
 }
 
 kotlin {
-    jvmToolchain(22)
-}
+    js {
+        nodejs()
+        binaries.executable()
+    }
 
-val targetJavaVersion = "17"
-tasks.withType<KotlinCompile>().configureEach {
-    compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion))
-}
-
-tasks.withType<JavaCompile>().configureEach {
-    options.release.set(targetJavaVersion.toInt())
+    sourceSets {
+        commonMain.dependencies {
+            implementation("com.squareup.okio:okio:3.9.1")
+            implementation("com.github.ajalt.clikt:clikt:5.0.0")
+            implementation("io.github.pdvrieze.xmlutil:core:0.90.1")
+            implementation("io.github.pdvrieze.xmlutil:serialization:0.90.1")
+        }
+        jsMain {
+            dependencies {
+                implementation("com.squareup.okio:okio-nodefilesystem:3.9.1")
+            }
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
+    }
 }
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
-}
-
-dependencies {
-    implementation("com.squareup.okio:okio:3.9.1")
-    implementation("com.github.ajalt.clikt:clikt:5.0.0")
-    testImplementation(kotlin("test"))
-}
-
-tasks.named<Jar>("jar").configure {
-    manifest {
-        attributes["Main-Class"] = "io.github.lwasyl.ftl.cli.FtlTestsResultsCliKt"
-    }
-    archiveClassifier.set("fat")
-
-    configurations.named("runtimeClasspath").let { runtimeClasses ->
-        dependsOn(runtimeClasses)
-        from({ runtimeClasses.get().map { if (it.isDirectory) it else zipTree(it) } }) {
-            exclude("META-INF/**/*")
-        }
-    }
-    exclude("META-INF/**/*")
-
-    finalizedBy("r8jar")
-}
-
-configurations.register("r8")
-dependencies.add("r8", "com.android.tools:r8:8.5.35")
-tasks.register<JavaExec>("r8jar") {
-    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(22)) })
-
-    dependsOn("jar")
-
-    classpath(configurations.named("r8"))
-    mainClass.set("com.android.tools.r8.R8")
-
-    val jar = tasks.getByName<Jar>("jar")
-    val outFile = layout.buildDirectory.asFile.get().resolve("libs/${jar.archiveBaseName.get()}-r8.jar")
-
-    args(
-        "--release",
-        "--classfile",
-        "--output", outFile.toString(),
-        "--pg-conf", file("proguard-rules.pro"),
-        "--lib", System.getProperty("java.home").toString(),
-        jar.archiveFile.get().toString(),
-    )
 }
