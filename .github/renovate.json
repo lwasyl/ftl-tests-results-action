@@ -4,7 +4,7 @@
         "team:review"
     ],
     "extends": [
-        "config:base",
+        "config:recommended",
         "schedule:automergeMonthly"
     ]
 }
