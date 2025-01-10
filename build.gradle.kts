@@ -47,7 +47,7 @@ tasks.named<Jar>("jar").configure {
 }
 
 configurations.register("r8")
-dependencies.add("r8", "com.android.tools:r8:8.5.35")
+dependencies.add("r8", "com.android.tools:r8:8.7.18")
 tasks.register<JavaExec>("r8jar") {
     javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(22)) })
 
