@@ -7,7 +7,7 @@ plugins {
 }
 
 kotlin {
-    jvmToolchain(22)
+    jvmToolchain(23)
 }
 
 val targetJavaVersion = "17"
@@ -49,7 +49,7 @@ tasks.named<Jar>("jar").configure {
 configurations.register("r8")
 dependencies.add("r8", "com.android.tools:r8:8.7.18")
 tasks.register<JavaExec>("r8jar") {
-    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(22)) })
+    javaLauncher.set(javaToolchains.launcherFor { languageVersion.set(JavaLanguageVersion.of(23)) })
 
     dependsOn("jar")
 
