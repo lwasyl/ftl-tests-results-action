@@ -18,11 +18,9 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: |
-            19
-            20
+          java-version: 24
 
-      - uses: gradle/gradle-build-action@v3
+      - uses: gradle/actions/setup-gradle@v3
 
       - id: build-lib
         run: ./gradlew build
