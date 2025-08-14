@@ -24,7 +24,7 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
-    implementation("com.squareup.okio:okio:3.15.0")
+    implementation("com.squareup.okio:okio:3.16.0")
     implementation("com.github.ajalt.clikt:clikt:5.0.3")
     testImplementation(kotlin("test"))
 }
