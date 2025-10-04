@@ -12,7 +12,9 @@ plugins {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-        google()
+        maven {
+            url = uri("https://storage.googleapis.com/r8-releases/raw")
+        }
     }
 }
 
