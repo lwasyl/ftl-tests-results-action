@@ -1,8 +1,6 @@
 # Firebase Test Lab summary action
 
-This action extracts FTL tests results summary from a `*-merged-results.xml` file to a markdown output with the most important information.
-
-> **_NOTE:_**  The repository is still work in progress
+POC for an action that extracts FTL tests results summary from a `*-merged-results.xml` file to a markdown output with the most important information.
 
 Example usage:
 
