@@ -1,3 +1,6 @@
+> [!Warning]
+> This project is not maintained anymore
+
 # Firebase Test Lab summary action
 
 POC for an action that extracts FTL tests results summary from a `*-merged-results.xml` file to a markdown output with the most important information.
